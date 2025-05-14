@@ -10,7 +10,7 @@ import folium
 st.set_page_config(layout="wide", page_title="House Price Prediction")
 
 # Load model and data
-model = joblib.load("model.pkl")
+model = joblib.load("xgb_model.pkl")
 df = pd.read_csv("data.csv")
 
 # App title
