@@ -13,7 +13,7 @@ from streamlit_folium import st_folium
 # Set page config
 st.set_page_config(page_title="House Price Predictor", layout="centered")
 
-# Apply enhanced CSS styling
+# Apply enhanced CSS styling including new info-box style
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -44,22 +44,21 @@ st.markdown("""
         text-shadow: 2px 2px 8px rgba(0,0,0,0.85);
     }
 
-   .headline-block {
-    background: rgba(0, 0, 0, 0.75);
-    border-radius: 15px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    backdrop-filter: blur(4px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    color: #fff;
-    text-align: center;
-}
+    .headline-block {
+        background: rgba(0, 0, 0, 0.75);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        color: #fff;
+        text-align: center;
+    }
 
-.headline-block h1, .headline-block h3 {
-    color: #ffffff;
-    text-shadow: 3px 3px 10px rgba(0,0,0,0.9);
-}
-
+    .headline-block h1, .headline-block h3 {
+        color: #ffffff;
+        text-shadow: 3px 3px 10px rgba(0,0,0,0.9);
+    }
 
     section[data-testid="stSidebar"] {
         background-color: rgba(20, 20, 30, 0.95);
@@ -107,6 +106,16 @@ st.markdown("""
         border-left: 4px solid #f39c12;
         border-radius: 8px;
         margin-bottom: 1rem;
+    }
+
+    /* New style for info box backgrounds */
+    .info-box {
+        background-color: rgba(0, 0, 0, 0.75);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.7);
+        color: white;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -214,16 +223,45 @@ if "prediction" in st.session_state:
     if st.session_state["error_pct"] > 30:
         st.warning("❌ No house found within your range of income and preferred specifications. Please adjust your input.")
     else:
-        st.success(f"🏡 Estimated House Price: **${st.session_state['prediction']:,.2f}**")
-        st.markdown("### 📊 Comparison with Real Data")
-        st.write(f"**Closest Real House Price:** ${st.session_state['actual_price']:,.2f}")
-        st.write(f"**Prediction Error:** ${st.session_state['error_amount']:,.2f} ({st.session_state['error_pct']:.2f}%)")
-        st.markdown("### 📈 Model Performance on Test Set")
-        st.write(f"**Mean Absolute Error (MAE):** ${mae:,.2f}")
-        st.write(f"**Root Mean Squared Error (RMSE):** ${rmse:,.2f}")
-        st.write(f"**R² Score:** {r2:.4f}")
+        st.markdown(f"""
+        <div class="info-box">
+        🏡 Estimated House Price: <b>${st.session_state['prediction']:,.2f}</b>
+        </div>
+        """, unsafe_allow_html=True)
 
-        st.markdown("### ⭐ Neighborhood Reviews")
+        st.markdown("""
+        <div class="info-box">
+        ### 📊 Comparison with Real Data
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="info-box">
+        <b>Closest Real House Price:</b> ${st.session_state['actual_price']:,.2f}<br>
+        <b>Prediction Error:</b> ${st.session_state['error_amount']:,.2f} ({st.session_state['error_pct']:.2f}%)
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="info-box">
+        ### 📈 Model Performance on Test Set
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="info-box">
+        <b>Mean Absolute Error (MAE):</b> ${mae:,.2f}<br>
+        <b>Root Mean Squared Error (RMSE):</b> ${rmse:,.2f}<br>
+        <b>R² Score:</b> {r2:.4f}
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="info-box">
+        ### ⭐ Neighborhood Reviews
+        </div>
+        """, unsafe_allow_html=True)
+
         st.info("🗣️ *\u201cLovely quiet neighborhood with great schools. Safe and friendly community!\u201d* – ★★★★★")
         st.info("🗣️ *\u201cDecent place but traffic can be a bit much during peak hours.\u201d* – ★★★☆☆")
         st.info("🗣️ *\u201cAffordable homes and great grocery options nearby.\u201d* – ★★★★☆")
